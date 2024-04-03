@@ -44,23 +44,31 @@ banco.commit()
 banco.close()
 
 # Caminho do arquivo
-arquivo_xlsx = 'RegistrosColaboradores.xlsx'
+#arquivo_xlsx = 'RegistrosColaboradores.xlsx'
 def gerarPlanilha():
-    # Verifica se o arquivo já existe
+    nome_arquivo = 'RegistrosColaboradores.xlsx'
+    arquivo_xlsx = os.path.join(pasta_dados, nome_arquivo)
+    
+    # Verifica se o diretório 'dados' existe, se não, cria o diretório
+    if not os.path.exists(pasta_dados):
+        os.makedirs(pasta_dados)
+    
+    # Verifica se o arquivo já existe no diretório 'dados'
     if not os.path.isfile(arquivo_xlsx):
         # Criando um novo livro
         wb = Workbook()
-        # Renomeando a aba padrão para 'Registro'
-        wsRegistro =wb.active
+        # Renomeando a aba padrão para 'Registros'
+        wsRegistro = wb.active
         wsRegistro.title = "Registros"
         # Criando e renomeando as outras abas
         wsColaboradores = wb.create_sheet("Colaboradores")
         wsFuncoes = wb.create_sheet("Funções")
         wsTaxas = wb.create_sheet("Taxas")
-        # Salvar
-        wb.save(r'.\RegistrosColaboradores.xlsx')
+        # Salvar no diretório 'dados'
+        wb.save(arquivo_xlsx)
+        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} foi criado com sucesso no diretório 'dados'.")
     else:
-        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {arquivo_xlsx} já existe.")
+        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} já existe no diretório 'dados'.")
 
 def salvarRegistro():
     # Caminho para o arquivo existente
