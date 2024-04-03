@@ -66,9 +66,9 @@ def gerarPlanilha():
         wsTaxas = wb.create_sheet("Taxas")
         # Salvar no diretório 'dados'
         wb.save(arquivo_xlsx)
-        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} foi criado com sucesso no diretório 'dados'.")
+        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} foi criado com sucesso no diretório {pasta_dados}.")
     else:
-        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} já existe no diretório 'dados'.")
+        QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} já existe no diretório {pasta_dados}.")
 
 def salvarRegistro():
     # Caminho para o arquivo existente
