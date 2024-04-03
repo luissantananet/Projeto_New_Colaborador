@@ -353,7 +353,7 @@ if __name__ == '__main__':
     frm_principal.btn_salvarTabela.clicked.connect(lambda: [cadastro_e_adicionar_taxas(), atualizarInterface()])
     frm_principal.btn_salvarFucao.clicked.connect(lambda: [cadastroFuncao(), atualizarInterface()])
     frm_principal.btn_excluirFucao.clicked.connect(lambda: [excluirFuncao(), atualizarInterface()])
-    frm_principal.btn_salvar.clicked.connect(salvarRegistro)
+    frm_principal.btn_salvarRegistro.clicked.connect(salvarRegistro)
     # Atualiza a interface ao iniciar o aplicativo
     atualizarInterface()
     frm_principal.show()
