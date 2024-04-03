@@ -70,12 +70,12 @@ def gerarPlanilha():
     else:
         QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} já existe no diretório {pasta_dados}.")
 
-def salvarRegistro():
+def salvarRegistro(arquivo_xlsx):
     # Caminho para o arquivo existente
     arquivos_xlsx = 'RegistrosColaboradores.xlsx'
     
     # Carrega o workbook existente
-    wb = load_workbook(arquivos_xlsx)
+    wb = load_workbook(arquivo_xlsx)
     
     # Seleciona a aba 'Registros'
     if 'Registros' in wb.sheetnames:
@@ -353,7 +353,7 @@ if __name__ == '__main__':
     frm_principal.btn_salvarTabela.clicked.connect(lambda: [cadastro_e_adicionar_taxas(), atualizarInterface()])
     frm_principal.btn_salvarFucao.clicked.connect(lambda: [cadastroFuncao(), atualizarInterface()])
     frm_principal.btn_excluirFucao.clicked.connect(lambda: [excluirFuncao(), atualizarInterface()])
-    
+    frm_principal.btn_salvar.clicked.connect(salvarRegistro)
     # Atualiza a interface ao iniciar o aplicativo
     atualizarInterface()
     frm_principal.show()

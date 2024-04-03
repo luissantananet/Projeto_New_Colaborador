@@ -342,7 +342,7 @@
        </rect>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_salvar">
+     <widget class="QPushButton" name="btn_salvarRegistro">
       <property name="geometry">
        <rect>
         <x>390</x>
@@ -626,7 +626,7 @@
        <string>Data Final</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_limpar">
+     <widget class="QPushButton" name="btn_limparRegistro">
       <property name="geometry">
        <rect>
         <x>310</x>
@@ -665,7 +665,7 @@
        <string>Data Inicial</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="btn_excluir">
+     <widget class="QPushButton" name="btn_excluirRegistro">
       <property name="geometry">
        <rect>
         <x>230</x>
@@ -1090,9 +1090,9 @@
   <tabstop>edt_advale</tabstop>
   <tabstop>edt_vale</tabstop>
   <tabstop>btn_calcular</tabstop>
-  <tabstop>btn_salvar</tabstop>
-  <tabstop>btn_limpar</tabstop>
-  <tabstop>btn_excluir</tabstop>
+  <tabstop>btn_salvarRegistro</tabstop>
+  <tabstop>btn_limparRegistro</tabstop>
+  <tabstop>btn_excluirRegistro</tabstop>
   <tabstop>edt_diaria</tabstop>
   <tabstop>edt_vtransp</tabstop>
   <tabstop>edt_vref</tabstop>
