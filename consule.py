@@ -1,4 +1,5 @@
 import os
+import sqlite3
 import pandas as pd
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
@@ -9,7 +10,7 @@ from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
 
 
-import sqlite3
+
 # Criando o Bando de Dados
 # Caminho para a pasta onde o banco de dados será armazenado
 pasta_dados = r'.\dados'
@@ -38,6 +39,14 @@ vref decimal(5,2) NOT NULL);""")
 cursor.execute("""CREATE TABLE IF NOT EXISTS funcoes (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     descricao TEXT NOT NULL);""")
+# Cria a tabela 'cadastro_colaborador' se ela não existir
+cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro_colaborador ( 
+        id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        nome_completo TEXT NOT NULL, 
+        funcao TEXT NOT NULL, 
+        cpf TEXT NOT NULL,
+        rg TEXT, 
+        cnh TEXT);""")
 # Salva as alterações no banco de dados
 banco.commit()
 # Fecha a conexão com o banco de dados
@@ -112,61 +121,55 @@ def salvarRegistro():
     wb.save(arquivos_xlsx)
 
 def cadastroColaborador():
-    id = frm_principal.edt_id.text()
-    nomecompleto = frm_principal.edt_nome.text()
-    funcao = frm_principal.comboBox_funcao.currentText()
-    cpf = frm_principal.edt_cpf.text()
-    rg = frm_principal.edt_rg.text()
-    cnh = frm_principal.edt_cnh.text()
-    endereco = frm_principal.edt_endereco.text()
-    numero = frm_principal.edt_numeroEnd.text()
-    bairro = frm_principal.edt_bairro.text()
-    cidade = frm_principal.comboBox_cidade.currentText()
-    uf = frm_principal.comboBox_uf.currentText()
-    try:
-        banco = sqlite3.connect(r'.\dados\banco_cadastro.db') 
-        cursor = banco.cursor()
-        # cria o bando se ele nao exixtir 
-        cursor.execute("""CREATE TABLE IF NOT EXISTS cadastro_colaborador ( 
-        id INTEGER PRIMARY KEY AUTOINCREMENT, 
-        nome_completa varchar(100)NOT NULL, 
-        funcao varchar(100)NOT NULL, 
-        cpf varchar(100)NOT NULL,
-        rg varchar(100), 
-        cnh varchar(100), 
-        endereco varchar(100),
-        numero varchar(10),
-        bairro varchar(100), 
-        cidade varchar(100), 
-        uf varchar(2));""")
-        # verifica se o colaborador já existe 
-        if id == "":
-            # inserir dados na tabela
-            cursor.execute("INSERT INTO cadastro_colaborador VALUES(NULL,'"+nomecompleto+"','"+funcao+"','"+cpf+"','"+rg+"','"+cnh+"','"+endereco+"','"+numero+"','"+bairro+"','"+cidade+"','"+uf+"')")
-            banco.commit()
-            banco.close()
-            frm_principal.edt_nome.setText('')
-            frm_principal.edt_cpf.setText('')
-            frm_principal.edt_rg.setText('')
-            frm_principal.edt_cnh.setText('')
-            frm_principal.edt_endereco.setText('')           
-            QMessageBox.information(frm_principal, "Aviso", "Colaborador cadastrado com sucesso")
-        else:
-            cursor.execute("UPDATE cadastro_colaborador SET nome_completa = '"+nomecompleto+"', funcao = '"+funcao+"',cpf = '"+cpf+"', rg = '"+rg+"', cnh = '"+cnh+"', endereco = '"+endereco+"', numero = '"+numero+"', bairro = '"+endereco+"', cidade = '"+cidade+"', uf = '"+uf+"' WHERE id = '"+id+"'")
-            banco.commit()
-            banco.close()
-            frm_principal.edt_nome.setText('')
-            frm_principal.edt_cpf.setText('')
-            frm_principal.edt_rg.setText('')
-            frm_principal.edt_cnh.setText('')
-            frm_principal.edt_endereco.setText('')
-            frm_principal.show()
-            QMessageBox.information(frm_principal, "Aviso", "Colaborador atualizado com sucesso")
-    except sqlite3.Error as erro:
-        print("Erro ao inserir os dados: ",erro)
-        QMessageBox.about(frm_principal, "ERRO","Erro ao inserir os dados")
-        banco.close()   
+    nomecompleto = frm_principal.comboBox_nomeCad.currentText()
+    funcao = frm_principal.comboBox_funcaoColab.currentText()
+    cpf = frm_principal.edt_cpfCad.text()
+    rg = frm_principal.edt_rgCad.text()
 
+    
+    cnh = frm_principal.edt_cnhCad.text()
+    print(funcao)
+    # Verifica se o campo nomecompleto não está vazio
+    if nomecompleto.strip() != "":
+        try:
+            banco = sqlite3.connect(r'.\dados\banco_cadastro.db') 
+            cursor = banco.cursor()
+            # Verifica se o colaborador já existe pelo nome completo
+            cursor.execute(f"SELECT * FROM cadastro_colaborador WHERE nome_completo = '{nomecompleto}';")
+            dados = cursor.fetchall()
+            if dados != nomecompleto.strip():
+                # Inserir novos dados na tabela
+                cursor.execute("INSERT INTO cadastro_colaborador (nome_completo, funcao, cpf, rg, cnh) VALUES (?, ?, ?, ?, ?)", (nomecompleto, funcao, cpf, rg, cnh))
+                banco.commit()
+                QMessageBox.information(frm_principal, "Aviso", "Colaborador cadastrado com sucesso")
+            else:
+                cursor.execute("UPDATE cadastro_colaborador SET nome_completo = ?, funcao = ?, cpf = ?, rg = ? WHERE nome_completo = ?", (nomecompleto, funcao, cpf, rg, nomecompleto))
+                banco.commit()
+                QMessageBox.information(frm_principal, "Aviso", "Colaborador atualizado com sucesso")
+        except sqlite3.Error as erro:
+            print("Erro ao inserir os dados: ", erro)
+            QMessageBox.critical(frm_principal, "ERRO", "Erro ao inserir os dados")
+        finally:
+            # Fecha a conexão com o banco de dados
+            banco.close()
+    else:
+        QMessageBox.warning(frm_principal, "Aviso", "O campo 'Nome Completo' não pode estar vazio.")
+def excluirColaborador():
+    nomecompleto = frm_principal.comboBox_nomeCad.currentText()
+    banco =sqlite3.connect(r'.\dados\banco_cadastro.db')
+    cursor = banco.cursor()
+    try:
+        cursor.execute("DELETE FROM cadastro_colaborador WHERE nome_completo = ?", (nomecompleto,))
+        banco.commit()
+        # Verifica se a função foi realmente excluída
+        if cursor.rowcount > 0:
+            QMessageBox.information(frm_principal, "Aviso", "Colaborador excluída com sucesso.")
+    except sqlite3.Error as erro:
+        print("Erro ao excluir a função: ", erro)
+        QMessageBox.critical(frm_principal, "ERRO", "Erro ao excluir a função.")
+    finally:
+        # Fecha a conexão com o banco de dados
+        banco.close()
 # Função unificada para capturar os dados do formulário e adicionar na aba 'Taxas'
 def cadastro_e_adicionar_taxas():
     # Captura os dados do formulário
@@ -204,14 +207,14 @@ def preencherComboBoxFuncao():
     # Cria um cursor para executar operações no banco de dados
     cursor = banco.cursor()
     # Seleciona todas as descrições da tabela 'funcoes'
-    cursor.execute("SELECT descricao FROM cadastro_colaborador")
+    cursor.execute("SELECT descricao FROM funcoes")
     # Recupera todos os resultados
-    colaboradores = cursor.fetchall()
+    funcoes = cursor.fetchall()
     # Lista para armazenar as descrições
-    lista_colaboradores = [colaborador[0] for colaborador in colaboradores]
+    lista_funcoes = [funcao[0] for funcao in funcoes]
     # Fecha a conexão com o banco de dados
     banco.close()
-    return lista_colaboradores
+    return lista_funcoes
 def cadastroFuncao():
     funcao = frm_principal.comboBox_funcaoCad.currentText()
     
@@ -261,14 +264,14 @@ def preencherComboBoxRegitro():
     # Cria um cursor para executar operações no banco de dados
     cursor = banco.cursor()
     # Seleciona todas as descrições da tabela 'funcoes'
-    cursor.execute("SELECT descricao FROM funcoes")
+    cursor.execute("SELECT nome_completo FROM cadastro_colaborador")
     # Recupera todos os resultados
-    funcoes = cursor.fetchall()
+    colaboradores = cursor.fetchall()
     # Lista para armazenar as descrições
-    lista_funcoes = [funcao[0] for funcao in funcoes]
+    lista_colaboradores = [colaborador[0] for colaborador in colaboradores]
     # Fecha a conexão com o banco de dados
     banco.close()
-    return lista_funcoes
+    return lista_colaboradores
 def calcularRegistro():
     # +
     dias = str(frm_principal.edt_dias.text()).replace(',','.')
@@ -306,8 +309,9 @@ def calcularRegistro():
     frm_principal.edt_total.setText("{:.2f}".format(total))
 
 def gerarWord ():
+    pass
     # pegar dados da planilha
-    for indice, linha in enumerate(sheet_alunos.iter_rows(min_row=2)):
+    """for indice, linha in enumerate(sheet_alunos.iter_rows(min_row=2)):
         nome_curso = linha[0].value
         nome_participante = linha[1].value
         tipo_participacao = linha[2].value
@@ -335,11 +339,15 @@ def gerarWord ():
         desenhar.text((750, 1930),data_final,fill='blue',font=fonte_data)
         
         desenhar.text((2220, 1930),data_emissao,fill='blue',font=fonte_data)
-        image.save(f'./teste/{indice} {nome_participante} certificado.png')
+        image.save(f'./teste/{indice} {nome_participante} certificado.png')"""
 def atualizarInterface():
     # Atualiza o comboBox com funções
     frm_principal.comboBox_funcaoCad.clear()
     frm_principal.comboBox_funcaoCad.addItems(preencherComboBoxFuncao())
+    frm_principal.comboBox_funcaoColab.clear()
+    frm_principal.comboBox_funcaoColab.addItems(preencherComboBoxFuncao())
+    frm_principal.comboBox_nomeCad.clear()
+    frm_principal.comboBox_nomeCad.addItems(preencherComboBoxRegitro())
 
     # Atualiza os campos de texto com as taxas mais recentes
     try:
@@ -369,7 +377,10 @@ def atualizarInterface():
     frm_principal.edt_vale.setText('')
     frm_principal.edt_vr.setText('')
     frm_principal.edt_vt.setText('')
-
+    # limpar tela cadastro Colaborador
+    frm_principal.edt_cpfCad.setText('')
+    frm_principal.edt_rgCad.setText('')
+    frm_principal.edt_cnhCad.setText('')
 
 
 if __name__ == '__main__':
@@ -381,6 +392,9 @@ if __name__ == '__main__':
     frm_principal.btn_salvarFucao.clicked.connect(lambda: [cadastroFuncao(), atualizarInterface()])
     frm_principal.btn_excluirFucao.clicked.connect(lambda: [excluirFuncao(), atualizarInterface()])
     frm_principal.btn_salvarRegistro.clicked.connect(lambda: [salvarRegistro(), atualizarInterface()])
+    frm_principal.btn_salvarCadastro.clicked.connect(lambda:[cadastroColaborador(), atualizarInterface()])
+    frm_principal.btn_calcular.clicked.connect(lambda:[calcularRegistro(), atualizarInterface()])
+    frm_principal.btn_excluirCad.clicked.connect(lambda:[excluirColaborador(), atualizarInterface()])
     # Atualiza a interface ao iniciar o aplicativo
     atualizarInterface()
     frm_principal.show()

@@ -936,19 +936,6 @@
         <string/>
        </property>
       </widget>
-      <widget class="QLineEdit" name="edt_nomeCad">
-       <property name="geometry">
-        <rect>
-         <x>70</x>
-         <y>40</y>
-         <width>371</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="inputMethodHints">
-        <set>Qt::ImhPreferUppercase|Qt::ImhUppercaseOnly</set>
-       </property>
-      </widget>
       <widget class="QLabel" name="label_18">
        <property name="geometry">
         <rect>
@@ -999,6 +986,35 @@
        </property>
        <property name="text">
         <string> RG:</string>
+       </property>
+      </widget>
+      <widget class="QPushButton" name="btn_excluirCad">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>140</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Excluir</string>
+       </property>
+      </widget>
+      <widget class="QComboBox" name="comboBox_nomeCad">
+       <property name="enabled">
+        <bool>true</bool>
+       </property>
+       <property name="geometry">
+        <rect>
+         <x>70</x>
+         <y>40</y>
+         <width>371</width>
+         <height>22</height>
+        </rect>
+       </property>
+       <property name="editable">
+        <bool>true</bool>
        </property>
       </widget>
      </widget>
@@ -1103,17 +1119,16 @@
   <tabstop>edt_vtranspCad</tabstop>
   <tabstop>edt_vrefCad</tabstop>
   <tabstop>btn_salvarTabela</tabstop>
-  <tabstop>btn_salvarCadastro</tabstop>
   <tabstop>edt_idCad</tabstop>
-  <tabstop>edt_cpfCad</tabstop>
-  <tabstop>edt_cnhCad</tabstop>
   <tabstop>comboBox_funcaoColab</tabstop>
+  <tabstop>edt_cpfCad</tabstop>
   <tabstop>edt_rgCad</tabstop>
-  <tabstop>edt_nomeCad</tabstop>
-  <tabstop>btn_salvarFucao</tabstop>
+  <tabstop>edt_cnhCad</tabstop>
+  <tabstop>btn_salvarCadastro</tabstop>
   <tabstop>comboBox_funcaoCad</tabstop>
-  <tabstop>btn_GerarTabela</tabstop>
+  <tabstop>btn_salvarFucao</tabstop>
   <tabstop>btn_excluirFucao</tabstop>
+  <tabstop>btn_GerarTabela</tabstop>
   <tabstop>edt_id</tabstop>
  </tabstops>
  <resources/>
