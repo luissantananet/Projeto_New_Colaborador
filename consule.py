@@ -1,12 +1,13 @@
 import os
-import openpyxl
-from openpyxl import Workbook
+import pandas as pd
+from openpyxl import Workbook, load_workbook
+from openpyxl.utils import get_column_letter
 from PyQt5 import uic, QtWidgets
 from PyQt5.QtWidgets import QMessageBox
 from PIL import Image, ImageDraw, ImageFont
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
-import pandas as pd
+
 
 import sqlite3
 # Criando o Bando de Dados
@@ -62,49 +63,45 @@ def gerarPlanilha():
         QMessageBox.information(frm_principal, "Aviso", f"O arquivo {arquivo_xlsx} já existe.")
 
 def salvarRegistro():
-    datainicial = frm_principal.datainicial.text()
-    datafinal = frm_principal.datafinal.text()
+    # Caminho para o arquivo existente
+    arquivos_xlsx = 'RegistrosColaboradores.xlsx'
+    
+    # Carrega o workbook existente
+    wb = load_workbook(arquivos_xlsx)
+    
+    # Seleciona a aba 'Registros'
+    if 'Registros' in wb.sheetnames:
+        ws = wb['Registros']
+    else:
+        # Se a aba 'Registros' não existir, cria uma nova aba
+        ws = wb.create_sheet('Registros')
+    
+    # Obtém os dados do formulário
+    data_inicial = frm_principal.datainicial.text()
+    data_final = frm_principal.datafinal.text()
     nome = frm_principal.edt_nome.text()
     advale = frm_principal.edt_advale.text()
     dias = frm_principal.edt_dias.text()
     he = frm_principal.edt_he.text()
-    sobtotal = frm_principal.edt_subtotal.text()
+    subtotal = frm_principal.edt_subtotal.text()
     total = frm_principal.edt_total.text()
     vale = frm_principal.edt_vale.text()
     vr = frm_principal.edt_vr.text()
     vt = frm_principal.edt_vt.text()
-    try:
-       
-        if ids == "":
-            cursor.execute("INSERT INTO registro VALUES(NULL,'"+datainicial+"','"+datafinal+"','"+nome+"','"+dias+"','"+he+"','"+vr+"','"+vt+"','"+advale+"','"+vale+"','"+sobtotal+"','"+total+"');")
-            banco.commit()
-            banco.close()
-            frm_principal.edt_nome.setText('')
-            frm_principal.edt_advale.setText('')
-            frm_principal.edt_dias.setText('')
-            frm_principal.edt_he.setText('')
-            frm_principal.edt_subtotal.setText('')
-            frm_principal.edt_total.setText('')
-            frm_principal.edt_vale.setText('')
-            frm_principal.edt_vr.setText('')
-            frm_principal.edt_vt.setText('')
-            QMessageBox.information(frm_principal, "Aviso", "Registro cadastrado com sucesso")
-        else:
-            cursor.execute("UPDATE registro SET data_inicial = '"+datainicial+"', data_final = '"+datafinal+"',nome_completo = '"+nome+"',dias_tr = '"+dias+"', he = '"+he+"', vr = '"+vr+"', vt = '"+vt+"',ad_vale = '"+advale+"', vale = '"+vale+"', subtotal = '"+sobtotal+"', total = '"+total+"'")
-            banco.commit()
-            banco.close()
-            frm_principal.edt_nome.setText('')
-            frm_principal.edt_advale.setText('')
-            frm_principal.edt_dias.setText('')
-            frm_principal.edt_he.setText('')
-            frm_principal.edt_subtotal.setText('')
-            frm_principal.edt_total.setText('')
-            frm_principal.edt_vale.setText('')
-            frm_principal.edt_vr.setText('')
-            frm_principal.edt_vt.setText('')
-            QMessageBox.information(frm_principal, "Aviso", "Registro atualizado com sucesso")
-    except sqlite3.Error as erro:
-        print("Erro ao cadastrar registro: ",erro)
+
+    # Define os títulos das colunas
+    colunas = ['Data Inicial', 'Data Final', 'Nome', 'Dias TR', 'HE', 'VT', 'VR', 'AS Vale', 'Vale', 'Subtotal', 'Total']
+    
+    # Adiciona os títulos das colunas na primeira linha se a planilha estiver vazia
+    if ws.max_row == 1 and all([cell.value is None for cell in ws[1]]):
+        for col_num, title in enumerate(colunas, 1):
+            ws[get_column_letter(col_num) + '1'] = title
+    
+    # Adiciona os dados na próxima linha disponível
+    ws.append([data_inicial, data_final, nome, dias, he, vt, vr, advale, vale, subtotal, total])
+    
+    # Salva o arquivo
+    wb.save(arquivo_xlsx)
 
 def cadastroColaborador():
     id = frm_principal.edt_id.text()
