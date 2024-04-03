@@ -116,6 +116,19 @@
        <string>Excluir Tudo</string>
       </property>
      </widget>
+     <widget class="QPushButton" name="btn_GerarTabela">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>440</y>
+        <width>91</width>
+        <height>23</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Gerar Tabela</string>
+      </property>
+     </widget>
     </widget>
     <widget class="QWidget" name="tab_registro">
      <attribute name="title">
@@ -134,6 +147,9 @@
        <string> Tabelas</string>
       </property>
       <widget class="QLineEdit" name="edt_diaria">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>10</x>
@@ -183,6 +199,9 @@
        </property>
       </widget>
       <widget class="QLineEdit" name="edt_hextra">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>80</x>
@@ -193,6 +212,9 @@
        </property>
       </widget>
       <widget class="QLineEdit" name="edt_vtransp">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>150</x>
@@ -216,6 +238,9 @@
        </property>
       </widget>
       <widget class="QLineEdit" name="edt_vref">
+       <property name="enabled">
+        <bool>false</bool>
+       </property>
        <property name="geometry">
         <rect>
          <x>220</x>
@@ -1031,11 +1056,66 @@
         <bool>true</bool>
        </property>
       </widget>
+      <widget class="QPushButton" name="btn_excluirFucao">
+       <property name="geometry">
+        <rect>
+         <x>290</x>
+         <y>90</y>
+         <width>75</width>
+         <height>23</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Excluir</string>
+       </property>
+      </widget>
      </widget>
     </widget>
    </widget>
   </widget>
  </widget>
+ <tabstops>
+  <tabstop>tabWidget</tabstop>
+  <tabstop>tableWidget</tabstop>
+  <tabstop>btn_gerar</tabstop>
+  <tabstop>btn_excluirTabela</tabstop>
+  <tabstop>edt_hextra</tabstop>
+  <tabstop>datainicial</tabstop>
+  <tabstop>datafinal</tabstop>
+  <tabstop>comboBox_nome</tabstop>
+  <tabstop>edt_dias</tabstop>
+  <tabstop>edt_he</tabstop>
+  <tabstop>edt_vt</tabstop>
+  <tabstop>edt_vr</tabstop>
+  <tabstop>edt_advale</tabstop>
+  <tabstop>edt_vale</tabstop>
+  <tabstop>btn_calcular</tabstop>
+  <tabstop>btn_salvar</tabstop>
+  <tabstop>btn_limpar</tabstop>
+  <tabstop>btn_excluir</tabstop>
+  <tabstop>edt_diaria</tabstop>
+  <tabstop>edt_vtransp</tabstop>
+  <tabstop>edt_vref</tabstop>
+  <tabstop>edt_total</tabstop>
+  <tabstop>edt_subtotal</tabstop>
+  <tabstop>edt_diariaCad</tabstop>
+  <tabstop>edt_hextraCad</tabstop>
+  <tabstop>edt_vtranspCad</tabstop>
+  <tabstop>edt_vrefCad</tabstop>
+  <tabstop>btn_salvarTabela</tabstop>
+  <tabstop>btn_salvarCadastro</tabstop>
+  <tabstop>edt_idCad</tabstop>
+  <tabstop>edt_cpfCad</tabstop>
+  <tabstop>edt_cnhCad</tabstop>
+  <tabstop>comboBox_funcaoColab</tabstop>
+  <tabstop>edt_rgCad</tabstop>
+  <tabstop>edt_nomeCad</tabstop>
+  <tabstop>btn_salvarFucao</tabstop>
+  <tabstop>comboBox_funcaoCad</tabstop>
+  <tabstop>btn_GerarTabela</tabstop>
+  <tabstop>btn_excluirFucao</tabstop>
+  <tabstop>edt_id</tabstop>
+ </tabstops>
  <resources/>
  <connections/>
 </ui>
