@@ -70,12 +70,12 @@ def gerarPlanilha():
     else:
         QMessageBox.information(frm_principal, "Aviso", f"O arquivo {nome_arquivo} já existe no diretório {pasta_dados}.")
 
-def salvarRegistro(arquivo_xlsx):
+def salvarRegistro():
     # Caminho para o arquivo existente
-    arquivos_xlsx = 'RegistrosColaboradores.xlsx'
+    arquivos_xlsx = r'.\dados\RegistrosColaboradores.xlsx'
     
     # Carrega o workbook existente
-    wb = load_workbook(arquivo_xlsx)
+    wb = load_workbook(arquivos_xlsx)
     
     # Seleciona a aba 'Registros'
     if 'Registros' in wb.sheetnames:
@@ -87,7 +87,7 @@ def salvarRegistro(arquivo_xlsx):
     # Obtém os dados do formulário
     data_inicial = frm_principal.datainicial.text()
     data_final = frm_principal.datafinal.text()
-    nome = frm_principal.edt_nome.text()
+    nome = frm_principal.comboBox_nome.currentText()
     advale = frm_principal.edt_advale.text()
     dias = frm_principal.edt_dias.text()
     he = frm_principal.edt_he.text()
@@ -109,7 +109,7 @@ def salvarRegistro(arquivo_xlsx):
     ws.append([data_inicial, data_final, nome, dias, he, vt, vr, advale, vale, subtotal, total])
     
     # Salva o arquivo
-    wb.save(arquivo_xlsx)
+    wb.save(arquivos_xlsx)
 
 def cadastroColaborador():
     id = frm_principal.edt_id.text()
@@ -204,14 +204,14 @@ def preencherComboBoxFuncao():
     # Cria um cursor para executar operações no banco de dados
     cursor = banco.cursor()
     # Seleciona todas as descrições da tabela 'funcoes'
-    cursor.execute("SELECT descricao FROM funcoes")
+    cursor.execute("SELECT descricao FROM cadastro_colaborador")
     # Recupera todos os resultados
-    funcoes = cursor.fetchall()
+    colaboradores = cursor.fetchall()
     # Lista para armazenar as descrições
-    lista_funcoes = [funcao[0] for funcao in funcoes]
+    lista_colaboradores = [colaborador[0] for colaborador in colaboradores]
     # Fecha a conexão com o banco de dados
     banco.close()
-    return lista_funcoes
+    return lista_colaboradores
 def cadastroFuncao():
     funcao = frm_principal.comboBox_funcaoCad.currentText()
     
@@ -253,7 +253,22 @@ def excluirFuncao():
     finally:
         # Fecha a conexão com o banco de dados
         banco.close()
-
+def preencherComboBoxRegitro():
+    # Caminho para o arquivo do banco de dados
+    database = r'.\dados\banco_cadastro.db'
+    # Conecta ao banco de dados
+    banco = sqlite3.connect(database)
+    # Cria um cursor para executar operações no banco de dados
+    cursor = banco.cursor()
+    # Seleciona todas as descrições da tabela 'funcoes'
+    cursor.execute("SELECT descricao FROM funcoes")
+    # Recupera todos os resultados
+    funcoes = cursor.fetchall()
+    # Lista para armazenar as descrições
+    lista_funcoes = [funcao[0] for funcao in funcoes]
+    # Fecha a conexão com o banco de dados
+    banco.close()
+    return lista_funcoes
 def calcularRegistro():
     # +
     dias = str(frm_principal.edt_dias.text()).replace(',','.')
@@ -325,7 +340,7 @@ def atualizarInterface():
     # Atualiza o comboBox com funções
     frm_principal.comboBox_funcaoCad.clear()
     frm_principal.comboBox_funcaoCad.addItems(preencherComboBoxFuncao())
-    
+
     # Atualiza os campos de texto com as taxas mais recentes
     try:
         banco = sqlite3.connect(r'.\dados\banco_cadastro.db') 
@@ -343,6 +358,18 @@ def atualizarInterface():
     except sqlite3.Error as erro:
         print("Erro ao atualizar os dados: ", erro)
 
+    # Limpando tela Registro
+    frm_principal.comboBox_nome.clear()
+    frm_principal.comboBox_nome.addItems(preencherComboBoxRegitro())
+    frm_principal.edt_advale.setText('')
+    frm_principal.edt_dias.setText('')
+    frm_principal.edt_he.setText('')
+    frm_principal.edt_subtotal.setText('')
+    frm_principal.edt_total.setText('')
+    frm_principal.edt_vale.setText('')
+    frm_principal.edt_vr.setText('')
+    frm_principal.edt_vt.setText('')
+
 
 
 if __name__ == '__main__':
@@ -353,7 +380,7 @@ if __name__ == '__main__':
     frm_principal.btn_salvarTabela.clicked.connect(lambda: [cadastro_e_adicionar_taxas(), atualizarInterface()])
     frm_principal.btn_salvarFucao.clicked.connect(lambda: [cadastroFuncao(), atualizarInterface()])
     frm_principal.btn_excluirFucao.clicked.connect(lambda: [excluirFuncao(), atualizarInterface()])
-    frm_principal.btn_salvarRegistro.clicked.connect(salvarRegistro)
+    frm_principal.btn_salvarRegistro.clicked.connect(lambda: [salvarRegistro(), atualizarInterface()])
     # Atualiza a interface ao iniciar o aplicativo
     atualizarInterface()
     frm_principal.show()
