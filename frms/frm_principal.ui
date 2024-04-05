@@ -9,7 +9,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>497</width>
+    <width>684</width>
     <height>512</height>
    </rect>
   </property>
@@ -21,13 +21,13 @@
   </property>
   <property name="minimumSize">
    <size>
-    <width>497</width>
+    <width>684</width>
     <height>512</height>
    </size>
   </property>
   <property name="maximumSize">
    <size>
-    <width>497</width>
+    <width>684</width>
     <height>512</height>
    </size>
   </property>
@@ -46,7 +46,7 @@
      <rect>
       <x>10</x>
       <y>10</y>
-      <width>478</width>
+      <width>661</width>
       <height>492</height>
      </rect>
     </property>
@@ -58,13 +58,13 @@
     </property>
     <property name="minimumSize">
      <size>
-      <width>451</width>
+      <width>631</width>
       <height>492</height>
      </size>
     </property>
     <property name="maximumSize">
      <size>
-      <width>553</width>
+      <width>16777215</width>
       <height>490</height>
      </size>
     </property>
@@ -85,15 +85,21 @@
        <rect>
         <x>10</x>
         <y>10</y>
-        <width>451</width>
+        <width>631</width>
         <height>421</height>
        </rect>
+      </property>
+      <property name="maximumSize">
+       <size>
+        <width>999999</width>
+        <height>16777215</height>
+       </size>
       </property>
      </widget>
      <widget class="QPushButton" name="btn_gerar">
       <property name="geometry">
        <rect>
-        <x>374</x>
+        <x>544</x>
         <y>440</y>
         <width>91</width>
         <height>23</height>
@@ -106,7 +112,7 @@
      <widget class="QPushButton" name="btn_excluirTabela">
       <property name="geometry">
        <rect>
-        <x>280</x>
+        <x>450</x>
         <y>440</y>
         <width>91</width>
         <height>23</height>
@@ -137,7 +143,7 @@
      <widget class="QGroupBox" name="groupBox">
       <property name="geometry">
        <rect>
-        <x>0</x>
+        <x>60</x>
         <y>340</y>
         <width>301</width>
         <height>71</height>
@@ -254,8 +260,8 @@
      <widget class="QGroupBox" name="groupBox_4">
       <property name="geometry">
        <rect>
-        <x>310</x>
-        <y>320</y>
+        <x>390</x>
+        <y>310</y>
         <width>151</width>
         <height>101</height>
        </rect>
@@ -345,7 +351,7 @@
      <widget class="QPushButton" name="btn_salvarRegistro">
       <property name="geometry">
        <rect>
-        <x>390</x>
+        <x>470</x>
         <y>430</y>
         <width>75</width>
         <height>23</height>
@@ -358,7 +364,7 @@
      <widget class="QDateEdit" name="datafinal">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>200</x>
         <y>30</y>
         <width>91</width>
         <height>22</height>
@@ -403,8 +409,8 @@
      <widget class="QGroupBox" name="groupBox_2">
       <property name="geometry">
        <rect>
-        <x>10</x>
-        <y>240</y>
+        <x>370</x>
+        <y>140</y>
         <width>171</width>
         <height>71</height>
        </rect>
@@ -462,7 +468,7 @@
      <widget class="QDateEdit" name="datainicial">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>80</x>
         <y>30</y>
         <width>91</width>
         <height>22</height>
@@ -511,7 +517,7 @@
      <widget class="QGroupBox" name="groupBox_3">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>60</x>
         <y>140</y>
         <width>291</width>
         <height>80</height>
@@ -616,7 +622,7 @@
      <widget class="QLabel" name="label_2">
       <property name="geometry">
        <rect>
-        <x>130</x>
+        <x>200</x>
         <y>10</y>
         <width>111</width>
         <height>16</height>
@@ -629,7 +635,7 @@
      <widget class="QPushButton" name="btn_limparRegistro">
       <property name="geometry">
        <rect>
-        <x>310</x>
+        <x>390</x>
         <y>430</y>
         <width>75</width>
         <height>23</height>
@@ -642,7 +648,7 @@
      <widget class="QLabel" name="label_7">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>60</x>
         <y>80</y>
         <width>91</width>
         <height>16</height>
@@ -655,7 +661,7 @@
      <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>80</x>
         <y>10</y>
         <width>111</width>
         <height>16</height>
@@ -668,7 +674,7 @@
      <widget class="QPushButton" name="btn_excluirRegistro">
       <property name="geometry">
        <rect>
-        <x>230</x>
+        <x>310</x>
         <y>430</y>
         <width>75</width>
         <height>23</height>
@@ -684,7 +690,7 @@
       </property>
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>60</x>
         <y>100</y>
         <width>411</width>
         <height>22</height>
@@ -702,10 +708,10 @@
      <widget class="QGroupBox" name="groupBox_10">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>70</x>
         <y>340</y>
-        <width>451</width>
-        <height>111</height>
+        <width>495</width>
+        <height>123</height>
        </rect>
       </property>
       <property name="title">
@@ -820,10 +826,10 @@
      <widget class="QGroupBox" name="groupBox_11">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>70</x>
         <y>10</y>
-        <width>451</width>
-        <height>181</height>
+        <width>455</width>
+        <height>183</height>
        </rect>
       </property>
       <property name="title">
@@ -1021,10 +1027,10 @@
      <widget class="QGroupBox" name="groupBox_12">
       <property name="geometry">
        <rect>
-        <x>10</x>
+        <x>70</x>
         <y>200</y>
-        <width>451</width>
-        <height>121</height>
+        <width>455</width>
+        <height>133</height>
        </rect>
       </property>
       <property name="title">

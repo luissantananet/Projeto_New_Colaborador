@@ -1,10 +1,11 @@
 import os
 import sqlite3
+import openpyxl
 import pandas as pd
 from openpyxl import Workbook, load_workbook
 from openpyxl.utils import get_column_letter
 from PyQt5 import uic, QtWidgets
-from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtWidgets import QMessageBox, QTableWidgetItem
 from PIL import Image, ImageDraw, ImageFont
 from reportlab.pdfgen import canvas
 from reportlab.lib.pagesizes import A4
@@ -98,18 +99,18 @@ def salvarRegistro():
     data_inicial = frm_principal.datainicial.text()
     data_final = frm_principal.datafinal.text()
     nome = frm_principal.comboBox_nome.currentText()
-    advale = frm_principal.edt_advale.text()
+    advale = frm_principal.edt_advale.text() if frm_principal.edt_advale.text() else '00.00'
     dias = frm_principal.edt_dias.text()
     he = frm_principal.edt_he.text()
     subtotal = frm_principal.edt_subtotal.text()
     total = frm_principal.edt_total.text()
-    vale = frm_principal.edt_vale.text()
+    vale = frm_principal.edt_vale.text() if frm_principal.edt_vale.text() else '00.00'
     vr = frm_principal.edt_vr.text()
     vt = frm_principal.edt_vt.text()
 
     # Define os títulos das colunas
     colunas = ['Data Inicial', 'Data Final', 'Nome', 'Dias TR',
-               'HE', 'VT', 'VR', 'AS Vale', 'Vale', 'Subtotal', 'Total']
+               'HE', 'VT', 'VR', 'AD Vale', 'Vale', 'Subtotal', 'Total']
 
     # Adiciona os títulos das colunas na primeira linha se a planilha estiver vazia
     if ws.max_row == 1 and all([cell.value is None for cell in ws[1]]):
@@ -124,8 +125,6 @@ def salvarRegistro():
     wb.save(arquivos_xlsx)
 
     # Limpando tela Registro
-    frm_principal.comboBox_nome.clear()
-    frm_principal.comboBox_nome.addItems(preencherComboBoxRegitro())
     frm_principal.edt_advale.setText('')
     frm_principal.edt_dias.setText('')
     frm_principal.edt_he.setText('')
@@ -134,6 +133,25 @@ def salvarRegistro():
     frm_principal.edt_vale.setText('')
     frm_principal.edt_vr.setText('')
     frm_principal.edt_vt.setText('')
+
+
+def limpardadosRegistro():
+    # Caminho para o arquivo existente
+    arquivos_xlsx = r'.\dados\RegistrosColaboradores.xlsx'
+    # Carrega o arquivo Excel
+    workbook = openpyxl.load_workbook(arquivos_xlsx)
+
+    # Seleciona a aba especificada
+    sheet = workbook['Registros']
+
+    # Obtém o número de linhas com dados
+    max_row = sheet.max_row
+
+    # Exclui as linhas a partir da segunda linha
+    sheet.delete_rows(2, max_row-1)
+
+    # Salva o arquivo
+    workbook.save(arquivos_xlsx)
 
 
 def cadastroColaborador():
@@ -358,6 +376,10 @@ def gerarWord():
 
 
 def atualizarInterface():
+    nome_arquivo = 'RegistrosColaboradores.xlsx'
+    arquivo_xlsx = os.path.join(pasta_dados, nome_arquivo)
+    if not os.path.isfile(arquivo_xlsx):
+        gerarPlanilha()
     # Atualiza o comboBox com funções
     frm_principal.comboBox_funcaoCad.clear()
     frm_principal.comboBox_funcaoCad.addItems(preencherComboBoxFuncao())
@@ -365,6 +387,8 @@ def atualizarInterface():
     frm_principal.comboBox_funcaoColab.addItems(preencherComboBoxFuncao())
     frm_principal.comboBox_nomeCad.clear()
     frm_principal.comboBox_nomeCad.addItems(preencherComboBoxRegitro())
+    frm_principal.comboBox_nome.clear()
+    frm_principal.comboBox_nome.addItems(preencherComboBoxRegitro())
 
     # Atualiza os campos de texto com as taxas mais recentes
     try:
@@ -390,11 +414,38 @@ def atualizarInterface():
             str('%.2f' % dados_lidos[0][4]).replace('.', ','))
     except sqlite3.Error as erro:
         print("Erro ao atualizar os dados: ", erro)
-
+    atualizarListaRegistro()
     # limpar tela cadastro Colaborador
     frm_principal.edt_cpfCad.setText('')
     frm_principal.edt_rgCad.setText('')
     frm_principal.edt_cnhCad.setText('')
+
+
+def atualizarListaRegistro():
+    # Carrega o arquivo Excel
+    arquivos_xlsx = r'.\dados\RegistrosColaboradores.xlsx'
+    workbook = openpyxl.load_workbook(arquivos_xlsx)
+
+    # Seleciona a primeira aba ativa do workbook
+    sheet = workbook.active
+
+    # Configura o QTableWidget com o número de linhas e colunas
+    # Subtrai 1 para não contar os cabeçalhos
+    frm_principal.tableWidget.setRowCount(sheet.max_row - 1)
+    frm_principal.tableWidget.setColumnCount(sheet.max_column)
+
+    # Define os cabeçalhos das colunas com os valores da primeira linha
+    headers = [cell.value for cell in next(sheet.iter_rows(max_row=1))]
+    frm_principal.tableWidget.setHorizontalHeaderLabels(headers)
+
+    # Preenche o QTableWidget com os dados, começando da segunda linha
+    for row_index, row in enumerate(sheet.iter_rows(min_row=2, values_only=True), start=0):
+        for column_index, value in enumerate(row, start=0):
+            item = QTableWidgetItem(str(value))
+            frm_principal.tableWidget.setItem(row_index, column_index, item)
+
+    # Ajusta o tamanho das colunas para se ajustar ao conteúdo
+    frm_principal.tableWidget.resizeColumnsToContents()
 
 
 if __name__ == '__main__':
@@ -416,6 +467,8 @@ if __name__ == '__main__':
         lambda: [calcularRegistro(), atualizarInterface()])
     frm_principal.btn_excluirCad.clicked.connect(
         lambda: [excluirColaborador(), atualizarInterface()])
+    frm_principal.btn_excluirTabela.clicked.connect(
+        lambda: [limpardadosRegistro(), atualizarInterface()])
     # Atualiza a interface ao iniciar o aplicativo
     atualizarInterface()
     frm_principal.show()
